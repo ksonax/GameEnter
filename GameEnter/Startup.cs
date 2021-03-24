@@ -28,6 +28,7 @@ namespace GameEnter
             services.AddControllersWithViews();
             services.AddDbContext<MvcGameContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("MvcGameContext")));
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +49,7 @@ namespace GameEnter
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -55,6 +57,7 @@ namespace GameEnter
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }
