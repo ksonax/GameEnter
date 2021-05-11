@@ -12,14 +12,14 @@ namespace GameEnter
 {
     public class IndexModel : PageModel
     {
-        private readonly GameEnter.Data.MvcGameContext _context;
+        private readonly GameEnter.Data.GameDbContext _context;
 
-        public IndexModel(GameEnter.Data.MvcGameContext context)
+        public IndexModel(GameEnter.Data.GameDbContext context)
         {
             _context = context;
         }
 
-        public IList<GameModel> GameModel { get;set; }
+        public IList<Game> GameModel { get;set; }
 
         public async Task OnGetAsync()
         {

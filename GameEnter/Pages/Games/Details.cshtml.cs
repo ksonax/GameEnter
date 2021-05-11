@@ -12,14 +12,14 @@ namespace GameEnter
 {
     public class DetailsModel : PageModel
     {
-        private readonly GameEnter.Data.MvcGameContext _context;
+        private readonly GameEnter.Data.GameDbContext _context;
 
-        public DetailsModel(GameEnter.Data.MvcGameContext context)
+        public DetailsModel(GameEnter.Data.GameDbContext context)
         {
             _context = context;
         }
 
-        public GameModel GameModel { get; set; }
+        public Game GameModel { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {

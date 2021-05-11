@@ -12,25 +12,25 @@ namespace GameEnter.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class GameModelsController : ControllerBase
+    public class GamesController : ControllerBase
     {
-        private readonly MvcGameContext _context;
+        private readonly GameDbContext _context;
 
-        public GameModelsController(MvcGameContext context)
+        public GamesController(GameDbContext context)
         {
             _context = context;
         }
 
         // GET: api/GameModels
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GameModel>>> GetGameModel()
+        public async Task<ActionResult<IEnumerable<Game>>> GetGameModel()
         {
             return await _context.GameModel.ToListAsync();
         }
 
         // GET: api/GameModels/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<GameModel>> GetGameModel(int id)
+        public async Task<ActionResult<Game>> GetGameModel(int id)
         {
             var gameModel = await _context.GameModel.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace GameEnter.Controllers
         // PUT: api/GameModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGameModel(int id, GameModel gameModel)
+        public async Task<IActionResult> PutGameModel(int id, Game gameModel)
         {
             if (id != gameModel.Id)
             {
@@ -76,7 +76,7 @@ namespace GameEnter.Controllers
         // POST: api/GameModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<GameModel>> PostGameModel(GameModel gameModel)
+        public async Task<ActionResult<Game>> PostGameModel(Game gameModel)
         {
             _context.GameModel.Add(gameModel);
             await _context.SaveChangesAsync();

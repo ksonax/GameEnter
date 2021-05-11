@@ -13,15 +13,15 @@ namespace GameEnter
 {
     public class EditModel : PageModel
     {
-        private readonly GameEnter.Data.MvcGameContext _context;
+        private readonly GameEnter.Data.GameDbContext _context;
 
-        public EditModel(GameEnter.Data.MvcGameContext context)
+        public EditModel(GameEnter.Data.GameDbContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public GameModel GameModel { get; set; }
+        public Game GameModel { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {

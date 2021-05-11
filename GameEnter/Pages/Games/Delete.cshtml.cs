@@ -12,15 +12,15 @@ namespace GameEnter
 {
     public class DeleteModel : PageModel
     {
-        private readonly GameEnter.Data.MvcGameContext _context;
+        private readonly GameEnter.Data.GameDbContext _context;
 
-        public DeleteModel(GameEnter.Data.MvcGameContext context)
+        public DeleteModel(GameEnter.Data.GameDbContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public GameModel GameModel { get; set; }
+        public Game GameModel { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {

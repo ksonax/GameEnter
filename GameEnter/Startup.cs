@@ -26,7 +26,7 @@ namespace GameEnter
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<MvcGameContext>(options =>
+            services.AddDbContext<GameDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("MvcGameContext")));
             services.AddRazorPages();
             services.AddSwaggerGen();
@@ -57,7 +57,9 @@ namespace GameEnter
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
 

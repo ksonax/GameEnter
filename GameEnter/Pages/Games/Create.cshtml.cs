@@ -12,9 +12,9 @@ namespace GameEnter
 {
     public class CreateModel : PageModel
     {
-        private readonly GameEnter.Data.MvcGameContext _context;
+        private readonly GameDbContext _context;
 
-        public CreateModel(GameEnter.Data.MvcGameContext context)
+        public CreateModel(GameDbContext context)
         {
             _context = context;
         }
@@ -25,7 +25,7 @@ namespace GameEnter
         }
 
         [BindProperty]
-        public GameModel GameModel { get; set; }
+        public Game GameModel { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
