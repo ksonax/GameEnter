@@ -7,13 +7,13 @@ using GameEnter.Models;
 
 namespace GameEnter.Data
 {
-    public class MvcGameContext : DbContext
+    public class GameDbContext : DbContext
     {
-        public MvcGameContext(DbContextOptions<MvcGameContext> options)
+        public GameDbContext(DbContextOptions<GameDbContext> options)
             : base(options)
         {
         }
 
-        public DbSet<GameModel> GameModel { get; set; } 
+        public DbSet<Game> GameModel { get; set; } 
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GameEnter.Migrations
 {
-    [DbContext(typeof(MvcGameContext))]
+    [DbContext(typeof(GameDbContext))]
     partial class MvcGameContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
