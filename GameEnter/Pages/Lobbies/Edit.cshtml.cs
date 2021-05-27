@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using GameEnter.Data;
 using GameEnter.Models;
 
-namespace GameEnter
+namespace GameEnter.Pages
 {
     public class EditModel : PageModel
     {
@@ -21,7 +21,7 @@ namespace GameEnter
         }
 
         [BindProperty]
-        public Game GameModel { get; set; }
+        public Lobby Lobby { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,9 +30,9 @@ namespace GameEnter
                 return NotFound();
             }
 
-            GameModel = await _context.GameModel.FirstOrDefaultAsync(m => m.Id == id);
+            Lobby = await _context.LobbyModel.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (GameModel == null)
+            if (Lobby == null)
             {
                 return NotFound();
             }
@@ -48,7 +48,7 @@ namespace GameEnter
                 return Page();
             }
 
-            _context.Attach(GameModel).State = EntityState.Modified;
+            _context.Attach(Lobby).State = EntityState.Modified;
 
             try
             {
@@ -56,7 +56,7 @@ namespace GameEnter
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GameModelExists(GameModel.Id))
+                if (!LobbyExists(Lobby.Id))
                 {
                     return NotFound();
                 }
@@ -69,9 +69,9 @@ namespace GameEnter
             return RedirectToPage("./Index");
         }
 
-        private bool GameModelExists(int id)
+        private bool LobbyExists(int id)
         {
-            return _context.GameModel.Any(e => e.Id == id);
+            return _context.LobbyModel.Any(e => e.Id == id);
         }
     }
 }

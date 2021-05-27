@@ -12,47 +12,48 @@ namespace GameEnter.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class GamesController : ControllerBase
+    public class LobbyController : ControllerBase
     {
-        private readonly Data.DataContext _context;
+        private readonly DataContext _context;
 
-        public GamesController(Data.DataContext context)
+        public LobbyController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: api/GameModels
+        // GET: api/Lobby
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Game>>> GetGameModel()
+        public async Task<ActionResult<List<Lobby>>> GetLobbyModel()
         {
-            return await _context.GameModel.ToListAsync();
+            return await _context.LobbyModel.ToListAsync();
+
         }
 
-        // GET: api/GameModels/5
+        // GET: api/Lobby/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Game>> GetGameModel(int id)
+        public async Task<ActionResult<Lobby>> GetLobby(int id)
         {
-            var gameModel = await _context.GameModel.FindAsync(id);
+            var lobby = await _context.LobbyModel.FindAsync(id);
 
-            if (gameModel == null)
+            if (lobby == null)
             {
                 return NotFound();
             }
 
-            return gameModel;
+            return lobby;
         }
 
-        // PUT: api/GameModels/5
+        // PUT: api/Lobby/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGameModel(int id, Game gameModel)
+        public async Task<IActionResult> PutLobby(int id, Lobby lobby)
         {
-            if (id != gameModel.Id)
+            if (id != lobby.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(gameModel).State = EntityState.Modified;
+            _context.Entry(lobby).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +61,7 @@ namespace GameEnter.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GameModelExists(id))
+                if (!LobbyExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +74,36 @@ namespace GameEnter.Controllers
             return NoContent();
         }
 
-        // POST: api/GameModels
+        // POST: api/Lobby
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Game>> PostGameModel(Game gameModel)
+        public async Task<ActionResult<Lobby>> PostLobby(Lobby lobby)
         {
-            _context.GameModel.Add(gameModel);
+            _context.LobbyModel.Add(lobby);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetGameModel", new { id = gameModel.Id }, gameModel);
+            return CreatedAtAction("GetLobby", new { id = lobby.Id }, lobby);
         }
 
-        // DELETE: api/GameModels/5
+        // DELETE: api/Lobby/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGameModel(int id)
+        public async Task<IActionResult> DeleteLobby(int id)
         {
-            var gameModel = await _context.GameModel.FindAsync(id);
-            if (gameModel == null)
+            var lobby = await _context.LobbyModel.FindAsync(id);
+            if (lobby == null)
             {
                 return NotFound();
             }
 
-            _context.GameModel.Remove(gameModel);
+            _context.LobbyModel.Remove(lobby);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool GameModelExists(int id)
+        private bool LobbyExists(int id)
         {
-            return _context.GameModel.Any(e => e.Id == id);
+            return _context.LobbyModel.Any(e => e.Id == id);
         }
     }
 }

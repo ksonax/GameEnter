@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using GameEnter.Data;
 using GameEnter.Models;
 
-namespace GameEnter
+namespace GameEnter.Pages
 {
     public class CreateModel : PageModel
     {
-        private readonly DataContext _context;
+        private readonly GameEnter.Data.DataContext _context;
 
-        public CreateModel(DataContext context)
+        public CreateModel(GameEnter.Data.DataContext context)
         {
             _context = context;
         }
@@ -25,7 +25,7 @@ namespace GameEnter
         }
 
         [BindProperty]
-        public Game GameModel { get; set; }
+        public Lobby Lobby { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
@@ -35,7 +35,7 @@ namespace GameEnter
                 return Page();
             }
 
-            _context.GameModel.Add(GameModel);
+            _context.LobbyModel.Add(Lobby);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
