@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GameEnter.Data;
 using GameEnter.Models;
 
-namespace GameEnter
+namespace GameEnter.Pages
 {
     public class DetailsModel : PageModel
     {
@@ -19,7 +19,7 @@ namespace GameEnter
             _context = context;
         }
 
-        public Game GameModel { get; set; }
+        public Lobby Lobby { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -28,9 +28,9 @@ namespace GameEnter
                 return NotFound();
             }
 
-            GameModel = await _context.GameModel.FirstOrDefaultAsync(m => m.Id == id);
+            Lobby = await _context.LobbyModel.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (GameModel == null)
+            if (Lobby == null)
             {
                 return NotFound();
             }

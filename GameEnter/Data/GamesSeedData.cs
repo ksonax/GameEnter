@@ -13,9 +13,9 @@ namespace GameEnter.Data
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
-            using (var context = new GameDbContext(
+            using (var context = new DataContext(
                 serviceProvider.GetRequiredService<
-                    DbContextOptions<GameDbContext>>()))
+                    DbContextOptions<DataContext>>()))
             {
                 // Look for any movies.
                 if (context.GameModel.Any())

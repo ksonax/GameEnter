@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GameEnter.Data;
 using GameEnter.Models;
 
-namespace GameEnter
+namespace GameEnter.Pages
 {
     public class IndexModel : PageModel
     {
@@ -19,11 +19,11 @@ namespace GameEnter
             _context = context;
         }
 
-        public IList<Game> GameModel { get;set; }
+        public IList<Lobby> Lobby { get;set; }
 
         public async Task OnGetAsync()
         {
-            GameModel = await _context.GameModel.ToListAsync();
+            Lobby = await _context.LobbyModel.ToListAsync();
         }
     }
 }
