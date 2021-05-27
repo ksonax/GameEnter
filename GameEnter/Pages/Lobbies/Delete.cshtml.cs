@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GameEnter.Data;
 using GameEnter.Models;
 
-namespace GameEnter
+namespace GameEnter.Pages
 {
     public class DeleteModel : PageModel
     {
@@ -20,7 +20,7 @@ namespace GameEnter
         }
 
         [BindProperty]
-        public Game GameModel { get; set; }
+        public Lobby Lobby { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,9 +29,9 @@ namespace GameEnter
                 return NotFound();
             }
 
-            GameModel = await _context.GameModel.FirstOrDefaultAsync(m => m.Id == id);
+            Lobby = await _context.LobbyModel.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (GameModel == null)
+            if (Lobby == null)
             {
                 return NotFound();
             }
@@ -45,11 +45,11 @@ namespace GameEnter
                 return NotFound();
             }
 
-            GameModel = await _context.GameModel.FindAsync(id);
+            Lobby = await _context.LobbyModel.FindAsync(id);
 
-            if (GameModel != null)
+            if (Lobby != null)
             {
-                _context.GameModel.Remove(GameModel);
+                _context.LobbyModel.Remove(Lobby);
                 await _context.SaveChangesAsync();
             }
 

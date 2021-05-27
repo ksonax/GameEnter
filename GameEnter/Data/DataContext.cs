@@ -7,13 +7,18 @@ using GameEnter.Models;
 
 namespace GameEnter.Data
 {
-    public class GameDbContext : DbContext
+    public class DataContext : DbContext
     {
-        public GameDbContext(DbContextOptions<GameDbContext> options)
+        public DataContext()
+        {
+
+        }
+        public DataContext(DbContextOptions<DataContext> options)
             : base(options)
         {
         }
 
         public DbSet<Game> GameModel { get; set; } 
+        public DbSet<Lobby> LobbyModel { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace GameEnter
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<GameDbContext>(options =>
+            services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("MvcGameContext")));
             services.AddRazorPages();
             services.AddSwaggerGen();
