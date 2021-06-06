@@ -20,8 +20,8 @@ namespace GameEnter.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("UserContextConnection")));
 
-                services.AddDefaultIdentity<GameEnterUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                    .AddEntityFrameworkStores<UserContext>();
+                /*services.AddDefaultIdentity<GameEnterUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                    .AddEntityFrameworkStores<UserContext>();*/
             });
         }
     }

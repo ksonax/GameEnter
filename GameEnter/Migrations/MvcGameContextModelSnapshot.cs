@@ -60,6 +60,9 @@ namespace GameEnter.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<byte[]>("ProfilePicture")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -82,6 +85,9 @@ namespace GameEnter.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("GamePicture")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Genre")
                         .HasColumnType("nvarchar(max)");
