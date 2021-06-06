@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using GameEnter.Areas.Identity.Data;
 
 namespace GameEnter
 {
@@ -28,6 +30,10 @@ namespace GameEnter
             services.AddControllersWithViews();
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("MvcGameContext")));
+            services.AddIdentity<GameEnterUser, IdentityRole>()
+                    .AddEntityFrameworkStores<UserContext>()
+                    .AddDefaultUI()
+                    .AddDefaultTokenProviders();
             services.AddRazorPages();
             services.AddSwaggerGen();
             services.AddRazorPages();
