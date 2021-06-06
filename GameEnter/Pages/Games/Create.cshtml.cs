@@ -32,11 +32,7 @@ namespace GameEnter
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-           /* if (Request.Form.Files.Count > 0)
+            if (Request.Form.Files.Count > 0)
             {
                 IFormFile file = Request.Form.Files.FirstOrDefault();
                 using (var dataStream = new MemoryStream())
@@ -44,7 +40,13 @@ namespace GameEnter
                     await file.CopyToAsync(dataStream);
                     GameModel.GamePicture = dataStream.ToArray();
                 }
-            }*/
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+           
 
             _context.GameModel.Add(GameModel);
             await _context.SaveChangesAsync();
