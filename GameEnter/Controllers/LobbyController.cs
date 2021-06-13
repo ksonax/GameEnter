@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GameEnter.Data;
 using GameEnter.Models;
+using GameEnter.Dtos;
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using GameEnter.Areas.Identity.Data;
 
 namespace GameEnter.Controllers
 {
@@ -15,95 +19,99 @@ namespace GameEnter.Controllers
     public class LobbyController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
+        private readonly UserManager<GameEnterUser> _userManager;
 
-        public LobbyController(DataContext context)
+        public LobbyController(DataContext context, IMapper mapper, UserManager<GameEnterUser> userManager)
         {
             _context = context;
+            _mapper = mapper;
+            _userManager = userManager;
         }
 
         // GET: api/Lobby
         [HttpGet]
-        public async Task<ActionResult<List<Lobby>>> GetLobbyModel()
+        public async Task<ActionResult<List<LobbyDto>>> GetLobbyModel()
         {
-            return await _context.LobbyModel.ToListAsync();
+            var lobbies = await _context.LobbyModel.ToListAsync();
+            return lobbies == null ? NoContent() : Ok(_mapper.Map<List<LobbyDto>>(lobbies));
 
         }
 
         // GET: api/Lobby/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Lobby>> GetLobby(int id)
+        public async Task<ActionResult<LobbyDto>> GetLobby(int id)
         {
-            var lobby = await _context.LobbyModel.FindAsync(id);
+            var lobby = await _context.LobbyModel.SingleOrDefaultAsync(g => g.Id == id);
 
-            if (lobby == null)
-            {
-                return NotFound();
-            }
-
-            return lobby;
+            return lobby == null ? NoContent() : Ok(_mapper.Map<LobbyDto>(lobby));
         }
 
         // PUT: api/Lobby/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLobby(int id, Lobby lobby)
+        public async Task<ActionResult> PutLobby(int id, LobbyDto lobbyDto)
         {
-            if (id != lobby.Id)
-            {
-                return BadRequest();
-            }
+            var lobby = await _context.LobbyModel.SingleOrDefaultAsync(l => l.Id == id);
 
-            _context.Entry(lobby).State = EntityState.Modified;
+            if (lobby == null)
+                return BadRequest("Invalid lobby ID");
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LobbyExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _mapper.Map(lobbyDto, lobby);
 
-            return NoContent();
+            if (await _context.SaveChangesAsync() > 0)
+                return NoContent();
+
+            throw new Exception("Failed to update lobby");
         }
 
         // POST: api/Lobby
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Lobby>> PostLobby(Lobby lobby)
+        [HttpPost("{id}")]
+        public async Task<ActionResult<LobbyDto>> PostLobby(LobbyDto lobbyDto, string id)
         {
-            _context.LobbyModel.Add(lobby);
-            await _context.SaveChangesAsync();
+            var user = await _userManager.FindByIdAsync(id);
 
-            return CreatedAtAction("GetLobby", new { id = lobby.Id }, lobby);
+            Game game = null;
+
+            if(lobbyDto.LobbyGame != null)
+                game = (await _context.GameModel.SingleOrDefaultAsync(g => g.Id == lobbyDto.LobbyGame.Id));
+
+            var users = await _context.LobbyModel.Include(l => l.Users).ToListAsync();
+
+            var lobby = new Lobby
+            {
+                Name = lobbyDto.Name,
+                LobbyGame = game,
+                Owner = user,
+                Users = new List<GameEnterUser>()
+            };
+
+            await _context.LobbyModel.AddAsync(lobby);
+            
+            if(await _context.SaveChangesAsync() > 0)
+                return CreatedAtAction("GetLobby", new { id = lobby.Id }, lobbyDto);
+            
+            throw new Exception("Failed to create lobby");
+
         }
 
         // DELETE: api/Lobby/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLobby(int id)
+        public async Task<ActionResult> DeleteLobby(int id)
         {
-            var lobby = await _context.LobbyModel.FindAsync(id);
+            var lobby = await _context.LobbyModel.SingleOrDefaultAsync(l => l.Id == id);
             if (lobby == null)
             {
-                return NotFound();
+                return BadRequest("Invalid lobby ID");
             }
 
             _context.LobbyModel.Remove(lobby);
-            await _context.SaveChangesAsync();
+            if (await _context.SaveChangesAsync() > 0)
+                return Ok();
 
-            return NoContent();
+            throw new Exception("Failed to remove lobby");
         }
 
-        private bool LobbyExists(int id)
-        {
-            return _context.LobbyModel.Any(e => e.Id == id);
-        }
     }
 }
