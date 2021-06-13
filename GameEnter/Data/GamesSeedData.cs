@@ -41,7 +41,7 @@ namespace GameEnter.Data
                     new Game
                     {
                         Title = "Tom Clancy's Rainbow Six Siege",
-                        ReleaseDate = DateTime.Parse("2015-4-7"),
+                        ReleaseDate = DateTime.Parse("2015-04-07"),
                         Genre = "Tactical First Person Shooter",
                     },
 
@@ -55,28 +55,28 @@ namespace GameEnter.Data
                     new Game
                     {
                         Title = "Overwatch",
-                        ReleaseDate = DateTime.Parse("2016-5-3"),
+                        ReleaseDate = DateTime.Parse("2016-05-03"),
                         Genre = "First Person Shooter",
                     },
 
                     new Game
                     {
                         Title = "Dota 2",
-                        ReleaseDate = DateTime.Parse("2013-7-9"),
+                        ReleaseDate = DateTime.Parse("2013-07-09"),
                         Genre = "MOBA",
                     },
 
                     new Game
                     {
                         Title = "Fortnite",
-                        ReleaseDate = DateTime.Parse("2017-7-21"),
+                        ReleaseDate = DateTime.Parse("2017-07-21"),
                         Genre = "Battle Royale",
                     },
 
                     new Game
                     {
                         Title = "Among Us",
-                        ReleaseDate = DateTime.Parse("2018-6-15"),
+                        ReleaseDate = DateTime.Parse("2018-06-15"),
                         Genre = "Social Deduction Multiplayer",
                     },
 
@@ -90,14 +90,14 @@ namespace GameEnter.Data
                     new Game
                     {
                         Title = "Terraria",
-                        ReleaseDate = DateTime.Parse("2011-5-16"),
+                        ReleaseDate = DateTime.Parse("2011-05-16"),
                         Genre = "Sandbox",
                     },
 
                     new Game
                     {
                         Title = "Grand Theft Auto V",
-                        ReleaseDate = DateTime.Parse("2013-9-17"),
+                        ReleaseDate = DateTime.Parse("2013-09-17"),
                         Genre = "Sandbox",
                     }
                 );

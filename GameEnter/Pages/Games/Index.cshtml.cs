@@ -25,5 +25,15 @@ namespace GameEnter
         {
             GameModel = await _context.GameModel.ToListAsync();
         }
+        public async Task<IActionResult> OnPost()
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+            
+            return RedirectToPage("./UserGames");
+        }
     }
 }

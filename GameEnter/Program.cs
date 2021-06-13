@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using GameEnter.Areas.Identity.Data;
 using System.Threading.Tasks;
 
-namespace MvcMovie
+namespace GameEnter
 {
     public class Program
     {

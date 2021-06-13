@@ -18,7 +18,8 @@ namespace GameEnter.Data
         {
         }
 
-        public DbSet<Game> GameModel { get; set; } 
+        public DbSet<Game> GameModel { get; set; }
         public DbSet<Lobby> LobbyModel { get; set; }
+        public DbSet<UserGames> UserGamesModel { get ; set; }
     }
 }

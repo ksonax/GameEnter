@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameEnter.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210605144232_ClearDatabase")]
-    partial class ClearDatabase
+    [Migration("20210612232925_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -62,6 +62,9 @@ namespace GameEnter.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<byte[]>("ProfilePicture")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -85,6 +88,9 @@ namespace GameEnter.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<byte[]>("GamePicture")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Genre")
                         .HasColumnType("nvarchar(max)");
 
@@ -94,7 +100,12 @@ namespace GameEnter.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserGamesId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserGamesId");
 
                     b.ToTable("GameModel");
                 });
@@ -124,11 +135,35 @@ namespace GameEnter.Migrations
                     b.ToTable("LobbyModel");
                 });
 
+            modelBuilder.Entity("GameEnter.Models.UserGames", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserGamesModel");
+                });
+
             modelBuilder.Entity("GameEnter.Areas.Identity.Data.GameEnterUser", b =>
                 {
                     b.HasOne("GameEnter.Models.Lobby", null)
                         .WithMany("Users")
                         .HasForeignKey("LobbyId");
+                });
+
+            modelBuilder.Entity("GameEnter.Models.Game", b =>
+                {
+                    b.HasOne("GameEnter.Models.UserGames", null)
+                        .WithMany("UserLibrary")
+                        .HasForeignKey("UserGamesId");
                 });
 
             modelBuilder.Entity("GameEnter.Models.Lobby", b =>
@@ -146,9 +181,23 @@ namespace GameEnter.Migrations
                     b.Navigation("Owner");
                 });
 
+            modelBuilder.Entity("GameEnter.Models.UserGames", b =>
+                {
+                    b.HasOne("GameEnter.Areas.Identity.Data.GameEnterUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("GameEnter.Models.Lobby", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("GameEnter.Models.UserGames", b =>
+                {
+                    b.Navigation("UserLibrary");
                 });
 #pragma warning restore 612, 618
         }
