@@ -4,14 +4,16 @@ using GameEnter.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace GameEnter.Migrations.User
+namespace GameEnter.Migrations
 {
-    [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(DataContext))]
+    [Migration("20210613111705_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,6 +39,9 @@ namespace GameEnter.Migrations.User
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("LobbyId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -76,6 +81,8 @@ namespace GameEnter.Migrations.User
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LobbyId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -85,6 +92,77 @@ namespace GameEnter.Migrations.User
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("GameEnter.Models.Game", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("GamePicture")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Genre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserGamesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserGamesId");
+
+                    b.ToTable("GameModel");
+                });
+
+            modelBuilder.Entity("GameEnter.Models.Lobby", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("LobbyGameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LobbyGameId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("LobbyModel");
+                });
+
+            modelBuilder.Entity("GameEnter.Models.UserGames", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserGamesModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -218,6 +296,44 @@ namespace GameEnter.Migrations.User
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("GameEnter.Areas.Identity.Data.GameEnterUser", b =>
+                {
+                    b.HasOne("GameEnter.Models.Lobby", null)
+                        .WithMany("Users")
+                        .HasForeignKey("LobbyId");
+                });
+
+            modelBuilder.Entity("GameEnter.Models.Game", b =>
+                {
+                    b.HasOne("GameEnter.Models.UserGames", null)
+                        .WithMany("UserLibrary")
+                        .HasForeignKey("UserGamesId");
+                });
+
+            modelBuilder.Entity("GameEnter.Models.Lobby", b =>
+                {
+                    b.HasOne("GameEnter.Models.Game", "LobbyGame")
+                        .WithMany()
+                        .HasForeignKey("LobbyGameId");
+
+                    b.HasOne("GameEnter.Areas.Identity.Data.GameEnterUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("LobbyGame");
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("GameEnter.Models.UserGames", b =>
+                {
+                    b.HasOne("GameEnter.Areas.Identity.Data.GameEnterUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -267,6 +383,16 @@ namespace GameEnter.Migrations.User
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GameEnter.Models.Lobby", b =>
+                {
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("GameEnter.Models.UserGames", b =>
+                {
+                    b.Navigation("UserLibrary");
                 });
 #pragma warning restore 612, 618
         }

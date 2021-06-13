@@ -16,9 +16,9 @@ namespace GameEnter.Areas.Identity
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) => {
-                services.AddDbContext<UserContext>(options =>
+                services.AddDbContext<DataContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("UserContextConnection")));
+                        context.Configuration.GetConnectionString("GameEnter")));
 
                 /*services.AddDefaultIdentity<GameEnterUser>(options => options.SignIn.RequireConfirmedAccount = false)
                     .AddEntityFrameworkStores<UserContext>();*/
