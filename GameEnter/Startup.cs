@@ -49,6 +49,11 @@ namespace GameEnter
             services.AddSingleton(mapper);
 
             services.AddMvc();
+            services.AddAuthentication().AddMicrosoftAccount(microsoftOptions =>
+            {
+                microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+                microsoftOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
+            });
 
         }
 
