@@ -39,7 +39,7 @@
     </dl>
 </div>
 <div>
-    @if (!User.IsInRole("BasicUser"))
+    @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
     {
         <a asp-page="./Edit" asp-route-id="@Model.GameModel.Id">Edit</a>
     }
