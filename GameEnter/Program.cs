@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using GameEnter.Areas.Identity.Data;
 using System.Threading.Tasks;
 
-namespace MvcMovie
+namespace GameEnter
 {
     public class Program
     {
@@ -23,7 +23,7 @@ namespace MvcMovie
                 var loggerFactory = services.GetRequiredService<ILoggerFactory>();
                 try
                 {
-                    var context = services.GetRequiredService<UserContext>();
+                    var context = services.GetRequiredService<DataContext>();
                     var userManager = services.GetRequiredService<UserManager<GameEnterUser>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     await RolesSeed.SeedRolesAsync(userManager, roleManager);

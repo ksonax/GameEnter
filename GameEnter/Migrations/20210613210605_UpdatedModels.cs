@@ -2,7 +2,7 @@
 
 namespace GameEnter.Migrations
 {
-    public partial class ClearDatabase : Migration
+    public partial class UpdatedModels : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

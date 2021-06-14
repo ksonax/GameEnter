@@ -1,5 +1,5 @@
-﻿@page "/gamemodels/index"
-@model GameEnter.IndexModel
+﻿@page "/usergames/index"
+@model GameEnter.UserGamesIndexModel
 
 @{
     ViewData["Title"] = "Index";
@@ -7,12 +7,7 @@
 }
 
 <h1>Index</h1>
-@if (User.IsInRole("SuperAdmin"))
-{
-    <p>
-        <a asp-page="Create">Create New</a>
-    </p>
-}
+
 <table class="table">
     <thead>
         <tr>
@@ -46,18 +41,7 @@
                     {
                         <img id="profilePicture" style="width:350px;height:350px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(item.GamePicture))">
                     }
-                </td>
-                <td>
-                    @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
-                    {
-                        <a asp-page="Edit" asp-route-id="@item.Id">Edit</a>
-                    }
-                    | <a asp-page="Details" asp-route-id="@item.Id">Details</a> |
-                    @if (User.IsInRole("SuperAdmin"))
-                    {
-                        <a asp-page="Delete" asp-route-id="@item.Id">Delete</a>
-                    }
-                </td>
+                </td>>
             </tr>
         }
     </tbody>

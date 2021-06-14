@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GameEnter.Data;
 using GameEnter.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GameEnter.Pages
 {
+    [Authorize(Roles = "Admin,SuperAdmin,LobbyOwner")]
     public class EditModel : PageModel
     {
         private readonly GameEnter.Data.DataContext _context;

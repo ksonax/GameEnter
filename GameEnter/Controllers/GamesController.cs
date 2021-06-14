@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GameEnter.Data;
 using GameEnter.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using GameEnter.Areas.Identity.Data;
+using GameEnter.Dtos;
+using AutoMapper;
 
 namespace GameEnter.Controllers
 {
@@ -14,95 +19,89 @@ namespace GameEnter.Controllers
     [ApiController]
     public class GamesController : ControllerBase
     {
-        private readonly Data.DataContext _context;
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public GamesController(Data.DataContext context)
+        public GamesController(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/GameModels
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Game>>> GetGameModel()
+        public async Task<ActionResult<List<GameDto>>> GetGameModel()
         {
-            return await _context.GameModel.ToListAsync();
+            var games = await _context.GameModel.ToListAsync();
+            return games == null ? NoContent() : Ok(_mapper.Map<List<GameDto>>(games));
         }
 
         // GET: api/GameModels/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Game>> GetGameModel(int id)
+        public async Task<ActionResult<GameDto>> GetGameModel(int id)
         {
-            var gameModel = await _context.GameModel.FindAsync(id);
+            var game = await _context.GameModel.SingleOrDefaultAsync(g => g.Id == id);
 
-            if (gameModel == null)
-            {
-                return NotFound();
-            }
-
-            return gameModel;
+            return game == null ? NoContent() : Ok(_mapper.Map<GameDto>(game));
         }
 
         // PUT: api/GameModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGameModel(int id, Game gameModel)
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult> PutGameModel(int id, GameDto gameDto)
         {
-            if (id != gameModel.Id)
-            {
-                return BadRequest();
-            }
+            var game = await _context.GameModel.SingleOrDefaultAsync(g => g.Id == id);
 
-            _context.Entry(gameModel).State = EntityState.Modified;
+            if (game == null)
+                return BadRequest("Invalid game ID");
+            
+            _mapper.Map(gameDto, game);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GameModelExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            if (await _context.SaveChangesAsync() > 0)
+                return NoContent();
 
-            return NoContent();
+            throw new Exception("Failed to update game");
         }
 
         // POST: api/GameModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Game>> PostGameModel(Game gameModel)
+        [Authorize(Roles = "SuperAdmin")]
+        public async Task<ActionResult<Game>> PostGameModel(GameDto gameDto)
         {
-            _context.GameModel.Add(gameModel);
-            await _context.SaveChangesAsync();
+            var game = new Game
+            {
+                Title = gameDto.Title,
+                Genre = gameDto.Genre,
+                ReleaseDate = gameDto.ReleaseDate,
+                Lobbies = new List<Lobby>()
 
-            return CreatedAtAction("GetGameModel", new { id = gameModel.Id }, gameModel);
+            };
+            await _context.GameModel.AddAsync(game);
+            if(await _context.SaveChangesAsync() > 0)
+                return CreatedAtAction("GetGameModel", new { id = game.Id }, game);
+            throw new Exception("Failed to create game");
+
         }
 
         // DELETE: api/GameModels/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGameModel(int id)
+        [Authorize(Roles = "SuperAdmin")]
+        public async Task<ActionResult> DeleteGameModel(int id)
         {
-            var gameModel = await _context.GameModel.FindAsync(id);
+            var gameModel = await _context.GameModel.Include(u => u.Lobbies).SingleOrDefaultAsync(g => g.Id == id);
             if (gameModel == null)
             {
-                return NotFound();
+                return BadRequest("Invalid game ID");
             }
 
             _context.GameModel.Remove(gameModel);
-            await _context.SaveChangesAsync();
+            if (await _context.SaveChangesAsync() > 0)
+                return Ok();
 
-            return NoContent();
+            throw new Exception("Failed to remove lobby");
         }
 
-        private bool GameModelExists(int id)
-        {
-            return _context.GameModel.Any(e => e.Id == id);
-        }
     }
 }

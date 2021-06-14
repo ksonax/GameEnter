@@ -7,14 +7,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using GameEnter.Data;
 using GameEnter.Models;
+using System.Security.Claims;
 
 namespace GameEnter
 {
-    public class IndexModel : PageModel
+    public class UserGamesIndexModel : PageModel
     {
         private readonly GameEnter.Data.DataContext _context;
 
-        public IndexModel(GameEnter.Data.DataContext context)
+        public UserGamesIndexModel(GameEnter.Data.DataContext context)
         {
             _context = context;
         }
@@ -23,7 +24,9 @@ namespace GameEnter
 
         public async Task OnGetAsync()
         {
-            GameModel = await _context.GameModel.ToListAsync();
+            var userGames = await _context.UserGamesModel.SingleOrDefaultAsync(x => x.User.Id == User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if(userGames.UserLibrary != null)
+                GameModel = userGames.UserLibrary.ToList();
         }
         public async Task<IActionResult> OnPost()
         {

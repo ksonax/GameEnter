@@ -12,6 +12,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using GameEnter.Areas.Identity.Data;
+using AutoMapper;
+using GameEnter.Helpers;
 
 namespace GameEnter
 {
@@ -29,15 +31,25 @@ namespace GameEnter
         {
             services.AddControllersWithViews();
             services.AddDbContext<DataContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("MvcGameContext")));
+                options.UseSqlServer(Configuration.GetConnectionString("GameEnter")));
             services.AddIdentity<GameEnterUser, IdentityRole>()
-                    .AddEntityFrameworkStores<UserContext>()
+                    .AddEntityFrameworkStores<DataContext>()
                     .AddDefaultUI()
                     .AddDefaultTokenProviders();
             services.AddRazorPages();
             services.AddSwaggerGen();
             services.AddRazorPages();
             services.AddControllers();
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new AutoMapperProfiles());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            services.AddMvc();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,6 +79,7 @@ namespace GameEnter
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                //endpoints.MapControllers();
             });
 
             app.UseSwagger();

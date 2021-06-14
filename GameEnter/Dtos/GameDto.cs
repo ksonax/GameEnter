@@ -1,12 +1,12 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GameEnter.Models
+namespace GameEnter.Dtos
 {
-    public class Game
+    public class GameDto
     {
         public int Id { get; set; }
         public string Title { get; set; }
@@ -14,8 +14,6 @@ namespace GameEnter.Models
         [DataType(DataType.Date)]
         public DateTime ReleaseDate { get; set; }
         public string Genre { get; set; }
-        public byte[] GamePicture { get; set; }
 
-        public List<Lobby> Lobbies { get; set; }
     }
 }

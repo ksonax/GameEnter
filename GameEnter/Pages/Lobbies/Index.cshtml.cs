@@ -23,7 +23,7 @@ namespace GameEnter.Pages
 
         public async Task OnGetAsync()
         {
-            Lobby = await _context.LobbyModel.ToListAsync();
+            Lobby = await _context.LobbyModel.Include(g => g.LobbyGame).Include(o => o.Owner).AsNoTracking().ToListAsync();
         }
     }
 }
