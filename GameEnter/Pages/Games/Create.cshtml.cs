@@ -9,9 +9,11 @@ using GameEnter.Data;
 using GameEnter.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GameEnter
 {
+    [Authorize(Roles = "SuperAdmin")]
     public class CreateModel : PageModel
     {
         private readonly DataContext _context;
@@ -21,6 +23,7 @@ namespace GameEnter
             _context = context;
         }
 
+        
         public IActionResult OnGet()
         {
             return Page();

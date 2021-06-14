@@ -7,10 +7,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using GameEnter.Data;
 using GameEnter.Models;
+using Microsoft.EntityFrameworkCore;
+using GameEnter.Pages.Lobbies;
+using System.Security.Claims;
+using GameEnter.Areas.Identity.Data;
 
 namespace GameEnter.Pages
 {
-    public class CreateModel : PageModel
+    public class CreateModel : GamesInLobbyModel
     {
         private readonly GameEnter.Data.DataContext _context;
 
@@ -19,26 +23,35 @@ namespace GameEnter.Pages
             _context = context;
         }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
+            PopulateLobbyGameDropDownList(_context);
             return Page();
         }
 
         [BindProperty]
         public Lobby Lobby { get; set; }
 
+
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            var lobbyToAdd = new Lobby();
+
+            if (await TryUpdateModelAsync<Lobby>(
+                 lobbyToAdd,
+                 "lobby",   // Prefix for form value.
+                 s => s.Name, s => s.LobbyGame))
             {
-                return Page();
+                _context.LobbyModel.Add(lobbyToAdd);
+                await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
             }
 
-            _context.LobbyModel.Add(Lobby);
-            await _context.SaveChangesAsync();
+            // Select DepartmentID if TryUpdateModelAsync fails.
+            PopulateLobbyGameDropDownList(_context, lobbyToAdd.LobbyGame);
+            return Page();
 
-            return RedirectToPage("./Index");
         }
     }
 }

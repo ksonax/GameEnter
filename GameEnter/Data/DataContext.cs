@@ -27,6 +27,9 @@ namespace GameEnter.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<Game>().ToTable(nameof(GameModel))
+                .HasMany(l => l.Lobbies)
+                .WithOne(g => g.LobbyGame);
         }
     }
 }

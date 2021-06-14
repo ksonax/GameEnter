@@ -11,6 +11,8 @@ using GameEnter.Dtos;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using GameEnter.Areas.Identity.Data;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GameEnter.Controllers
 {
@@ -33,7 +35,7 @@ namespace GameEnter.Controllers
         [HttpGet]
         public async Task<ActionResult<List<LobbyDto>>> GetLobbyModel()
         {
-            var lobbies = await _context.LobbyModel.ToListAsync();
+            var lobbies = await _context.LobbyModel.Include(g => g.LobbyGame).ToListAsync();
             return lobbies == null ? NoContent() : Ok(_mapper.Map<List<LobbyDto>>(lobbies));
 
         }
@@ -50,6 +52,7 @@ namespace GameEnter.Controllers
         // PUT: api/Lobby/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,SuperAdmin,LobbyOwner")]
         public async Task<ActionResult> PutLobby(int id, LobbyDto lobbyDto)
         {
             var lobby = await _context.LobbyModel.SingleOrDefaultAsync(l => l.Id == id);
@@ -67,10 +70,24 @@ namespace GameEnter.Controllers
 
         // POST: api/Lobby
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("{id}")]
-        public async Task<ActionResult<LobbyDto>> PostLobby(LobbyDto lobbyDto, string id)
+        [HttpPost]
+        public async Task<ActionResult<LobbyDto>> PostLobby(LobbyDto lobbyDto)
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var roles = await _userManager.GetRolesAsync(user);
+            var result = await _userManager.RemoveFromRolesAsync(user, roles);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot remove user existing roles");
+                throw new Exception("Failed to create lobby");
+            }
+            roles.Add("LobbyOwner");
+            result = await _userManager.AddToRolesAsync(user, roles);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot add selected roles to user");
+                throw new Exception("Failed to create lobby");
+            }
 
             Game game = null;
 
@@ -98,9 +115,11 @@ namespace GameEnter.Controllers
 
         // DELETE: api/Lobby/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,SuperAdmin,LobbyOwner")]
         public async Task<ActionResult> DeleteLobby(int id)
         {
             var lobby = await _context.LobbyModel.SingleOrDefaultAsync(l => l.Id == id);
+
             if (lobby == null)
             {
                 return BadRequest("Invalid lobby ID");

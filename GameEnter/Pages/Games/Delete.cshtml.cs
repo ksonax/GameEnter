@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using GameEnter.Data;
 using GameEnter.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GameEnter
 {
+    [Authorize(Roles = "SuperAdmin")]
     public class DeleteModel : PageModel
     {
         private readonly GameEnter.Data.DataContext _context;

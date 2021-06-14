@@ -79,7 +79,7 @@ namespace GameEnter
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
-                endpoints.MapControllers();
+                //endpoints.MapControllers();
             });
 
             app.UseSwagger();

@@ -10,9 +10,11 @@ using GameEnter.Data;
 using GameEnter.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GameEnter
 {
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class EditModel : PageModel
     {
         private readonly GameEnter.Data.DataContext _context;

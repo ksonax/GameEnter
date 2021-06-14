@@ -17,7 +17,7 @@ namespace GameEnter.Controllers
             _roleManager = roleManager;
         }
         [Authorize(Roles = "SuperAdmin")]
-        [Route("RoleManager/Index")]
+        //[Route("RoleManager/Index")]
         public async Task<IActionResult> Index()
         {
             var roles = await _roleManager.Roles.ToListAsync();

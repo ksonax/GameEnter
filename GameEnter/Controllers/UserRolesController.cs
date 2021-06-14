@@ -20,8 +20,8 @@ namespace GameEnter.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
         }
-        [Authorize(Roles = "SuperAdmin")]
-        [Route("UserRoles/Index")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        //[Route("UserRoles/Index")]
         public async Task<IActionResult> Index()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -37,12 +37,12 @@ namespace GameEnter.Controllers
             }
             return View(userRolesViewModel);
         }
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         private async Task<List<string>> GetUserRoles(GameEnterUser user)
         {
             return new List<string>(await _userManager.GetRolesAsync(user));
         }
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<IActionResult> Manage(string userId)
         {
             ViewBag.userId = userId;
@@ -73,7 +73,7 @@ namespace GameEnter.Controllers
             }
             return View(model);
         }
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpPost]
         public async Task<IActionResult> Manage(List<ManageUserRoles> model, string userId)
         {
