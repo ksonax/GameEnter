@@ -48,6 +48,7 @@ namespace GameEnter.Controllers
         // PUT: api/GameModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult> PutGameModel(int id, GameDto gameDto)
         {
             var game = await _context.GameModel.SingleOrDefaultAsync(g => g.Id == id);
@@ -66,13 +67,15 @@ namespace GameEnter.Controllers
         // POST: api/GameModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult<Game>> PostGameModel(GameDto gameDto)
         {
             var game = new Game
             {
                 Title = gameDto.Title,
                 Genre = gameDto.Genre,
-                ReleaseDate = gameDto.ReleaseDate
+                ReleaseDate = gameDto.ReleaseDate,
+                Lobbies = new List<Lobby>()
 
             };
             await _context.GameModel.AddAsync(game);
@@ -84,9 +87,10 @@ namespace GameEnter.Controllers
 
         // DELETE: api/GameModels/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult> DeleteGameModel(int id)
         {
-            var gameModel = await _context.GameModel.SingleOrDefaultAsync(g => g.Id == id);
+            var gameModel = await _context.GameModel.Include(u => u.Lobbies).SingleOrDefaultAsync(g => g.Id == id);
             if (gameModel == null)
             {
                 return BadRequest("Invalid game ID");

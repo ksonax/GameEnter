@@ -15,5 +15,7 @@ namespace GameEnter.Models
         public DateTime ReleaseDate { get; set; }
         public string Genre { get; set; }
         public byte[] GamePicture { get; set; }
+
+        public List<Lobby> Lobbies { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace GameEnter.Data
                     new Game
                     {
                         Title = "Counter-Strike Global Offensive",
-                        ReleaseDate = DateTime.Parse("2012-8-21"),
+                        ReleaseDate = DateTime.Parse("2012-08-21"),
                         Genre = "First Person Shooter",
                     },
 
@@ -48,7 +48,7 @@ namespace GameEnter.Data
                     new Game
                     {
                         Title = "Valorant",
-                        ReleaseDate = DateTime.Parse("2020-6-2"),
+                        ReleaseDate = DateTime.Parse("2020-06-02"),
                         Genre = "First Person Shooter",
                     },
 

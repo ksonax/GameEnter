@@ -28,7 +28,7 @@ namespace GameEnter.Pages
                 return NotFound();
             }
 
-            Lobby = await _context.LobbyModel.FirstOrDefaultAsync(m => m.Id == id);
+            Lobby = await _context.LobbyModel.Include(g => g.LobbyGame).Include(o => o.Owner).FirstOrDefaultAsync(m => m.Id == id);
 
             if (Lobby == null)
             {

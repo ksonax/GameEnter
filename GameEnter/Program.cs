@@ -23,7 +23,7 @@ namespace GameEnter
                 var loggerFactory = services.GetRequiredService<ILoggerFactory>();
                 try
                 {
-                    var context = services.GetRequiredService<UserContext>();
+                    var context = services.GetRequiredService<DataContext>();
                     var userManager = services.GetRequiredService<UserManager<GameEnterUser>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     await RolesSeed.SeedRolesAsync(userManager, roleManager);

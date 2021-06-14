@@ -33,7 +33,7 @@ namespace GameEnter
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("GameEnter")));
             services.AddIdentity<GameEnterUser, IdentityRole>()
-                    .AddEntityFrameworkStores<UserContext>()
+                    .AddEntityFrameworkStores<DataContext>()
                     .AddDefaultUI()
                     .AddDefaultTokenProviders();
             services.AddRazorPages();
@@ -79,6 +79,7 @@ namespace GameEnter
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                //endpoints.MapControllers();
             });
 
             app.UseSwagger();
